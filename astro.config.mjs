@@ -2,10 +2,9 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://kotop21.github.io',
-  base: '/название_репозитория',
+  site: '[https://kotop21.github.io](https://kotop21.github.io)',
+  base: '/RiseAndFall---WebSite',
   build: {
-    inlineStylesheets: 'never',
-  },
-  compressHTML: true,
+    inlineStylesheets: 'never'
+  }
 });
