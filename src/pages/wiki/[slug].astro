@@ -6,7 +6,7 @@ export async function getStaticPaths() {
     const files = Object.values(import.meta.glob('@docs/*.md', { eager: true }));
     
     return files.map((file: any) => {
-        const slug = file.file.split('/').pop().replace('.md', '');
+        const slug = file.file.split('/').pop().replace('.md', '').toLowerCase();
         return {
             params: { slug },
             props: { currentFile: file, allFiles: files }
@@ -17,21 +17,22 @@ export async function getStaticPaths() {
 const { currentFile, allFiles } = Astro.props;
 const { Content, frontmatter, getHeadings } = currentFile;
 const headings = getHeadings();
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const allPages = allFiles.map((f: any) => {
-    const s = f.file.split('/').pop().replace('.md', '');
+    const s = f.file.split('/').pop().replace('.md', '').toLowerCase();
     return { slug: s, title: f.frontmatter.title || s };
 });
 
-const currentSlug = Astro.params.slug;
+const currentSlug = Astro.params.slug.toLowerCase();
 ---
 
 <!doctype html>
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{frontmatter.title} | Wiki</title>
     </head>
     <body>
@@ -54,15 +55,8 @@ const currentSlug = Astro.params.slug;
                 </div>
             </aside>
 
-            <main class="markdown-container">
-                <article class="markdown-content">
-                    <Content />
-                </article>
-            </main>
-
             <aside class="right-sidebar">
-                <div class="sidebar-sticky-wrapper toc-box">
-                    <h3>На этой странице</h3>
+                <div class="toc-box">
                     <nav class="toc-links">
                         {headings.map(heading => (
                             <a href={`#${heading.slug}`} class={`depth-${heading.depth}`}>
@@ -72,134 +66,140 @@ const currentSlug = Astro.params.slug;
                     </nav>
                 </div>
             </aside>
+
+            <main class="markdown-container">
+                <article class="markdown-content">
+                    <Content />
+                </article>
+            </main>
         </div>
     </body>
 </html>
 
 <style>
+.wiki-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 280px;
+    grid-template-areas: "left main right";
+    gap: 40px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.left-sidebar { grid-area: left; }
+.markdown-container { grid-area: main; min-width: 0; overflow: hidden; }
+.right-sidebar { grid-area: right; }
+
+.sidebar-sticky-wrapper {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.doc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.doc-links a {
+    color: #A1A1AA;
+    font-size: 0.95rem;
+}
+
+.doc-links a:hover,
+.doc-links a.active {
+    color: var(--accent);
+}
+
+.markdown-content {
+    max-width: 100%;
+}
+
+.markdown-content :global(pre) {
+    background: #0d0d0d !important;
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.markdown-content :global(pre code) {
+    display: block;
+    padding: 1.5rem;
+    line-height: 1.6;
+    background: transparent !important;
+}
+
+.markdown-content :global(code) {
+    word-break: break-word;
+}
+
+.markdown-content :global(h1),
+.markdown-content :global(h2),
+.markdown-content :global(h3),
+.markdown-content :global(h4),
+.markdown-content :global(h5),
+.markdown-content :global(h6) {
+    scroll-margin-top: 120px;
+}
+
+.toc-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 12px;
+    position: sticky;
+    top: 100px;
+}
+
+.toc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toc-links a {
+    color: #A1A1AA;
+    font-size: 0.85rem;
+}
+
+.toc-links a:hover {
+    color: var(--accent);
+}
+
+.depth-3 { margin-left: 15px; }
+
+@media (max-width: 1200px) {
     .wiki-layout {
-        display: grid;
-        grid-template-columns: 260px 1fr 280px;
-        grid-template-areas: "left main right";
-        gap: 40px;
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        align-items: start;
+        grid-template-columns: 250px 1fr;
+        grid-template-areas: "left main";
     }
+    .right-sidebar { display: none; }
+}
 
-    .left-sidebar { grid-area: left; }
-    .markdown-container { grid-area: main; min-width: 0; }
-    .right-sidebar { grid-area: right; }
-
-    .sidebar-sticky-wrapper {
-        position: sticky;
-        top: 100px;
-        max-height: calc(100vh - 120px);
-        overflow-y: auto;
-    }
-
-    /* Левое меню */
-    .sidebar-sticky-wrapper h3 {
-        color: var(--fg);
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 20px;
-        opacity: 0.5;
-    }
-
-    .doc-links {
+@media (max-width: 1200px) {
+    .wiki-layout {
         display: flex;
         flex-direction: column;
-        gap: 12px;
     }
 
-    .doc-links a {
-        color: #888;
-        text-decoration: none;
-        font-size: 0.95rem;
+    .left-sidebar {
+        display: none;
     }
 
-    .doc-links a:hover, .doc-links a.active {
-        color: var(--accent);
-    }
-
-    .doc-links a.active {
-        font-weight: bold;
-    }
-
-    /* Контент статьи */
-    .markdown-content {
-        color: #ccc;
-        line-height: 1.6;
-    }
-
-    .markdown-content :global(h1) { color: var(--accent); font-size: 2.5rem; margin-bottom: 2rem; }
-    .markdown-content :global(h2) { 
-        color: var(--fg); 
-        font-size: 1.8rem; 
-        margin: 3rem 0 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        padding-bottom: 0.5rem;
-    }
-
-    .markdown-content :global(pre) {
-        background: #0d0d0d !important;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.05);
-        overflow-x: auto;
-        margin: 1.5rem 0;
+    .right-sidebar {
+        display: block;
+        order: -1;
         width: 100%;
-        box-sizing: border-box;
     }
 
-    .markdown-content :global(code) {
-        font-family: monospace;
-        background: rgba(255,255,255,0.08);
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        font-size: 0.9em;
-    }
-
-    /* Правое меню (TOC) */
     .toc-box {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.05);
-        padding: 20px;
-        border-radius: 12px;
+        position: static;
+        margin-bottom: 20px;
     }
-
-    .toc-links {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .toc-links a {
-        color: #666;
-        font-size: 0.85rem;
-        text-decoration: none;
-    }
-
-    .toc-links a:hover { color: var(--accent); }
-    .depth-3 { margin-left: 15px; }
-
-    /* Адаптивность */
-    @media (max-width: 1200px) {
-        .wiki-layout {
-            grid-template-columns: 250px 1fr;
-            grid-template-areas: "left main";
-        }
-        .right-sidebar { display: none; }
-    }
-
-    @media (max-width: 850px) {
-        .wiki-layout {
-            display: flex;
-            flex-direction: column;
-        }
-        .left-sidebar { display: none; }
-    }
+}
 </style>
