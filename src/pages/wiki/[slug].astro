@@ -39,21 +39,30 @@ const currentSlug = Astro.params.slug;
 
         <div class="wiki-layout">
             <aside class="left-sidebar">
-                <h3>Все статьи</h3>
-                <nav class="doc-links">
-                    {allPages.map(page => (
-                        <a 
-                            href={`${base}/wiki/${page.slug}/`} 
-                            class={currentSlug === page.slug ? "active" : ""}
-                        >
-                            {page.title}
-                        </a>
-                    ))}
-                </nav>
+                <div class="sidebar-content">
+                    <h3>Все статьи</h3>
+                    <nav class="doc-links">
+                        {allPages.map(page => (
+                            <a 
+                                href={`${base}/wiki/${page.slug}/`} 
+                                class={currentSlug === page.slug ? "active" : ""}
+                            >
+                                {page.title}
+                            </a>
+                        ))}
+                    </nav>
+                </div>
             </aside>
+
+            <main class="markdown-container">
+                <article class="markdown-content">
+                    <Content />
+                </article>
+            </main>
 
             <aside class="right-sidebar">
                 <div class="sticky-toc">
+                    <h3>На этой странице</h3>
                     <nav class="toc-links">
                         {headings.map(heading => (
                             <a href={`#${heading.slug}`} class={`depth-${heading.depth}`}>
@@ -63,126 +72,159 @@ const currentSlug = Astro.params.slug;
                     </nav>
                 </div>
             </aside>
-
-            <main class="markdown-content">
-                <Content />
-            </main>
         </div>
     </body>
 </html>
 
 <style>
     .wiki-layout {
-        font-size: 15px;
         display: grid;
-        grid-template-columns: 250px minmax(0, 1fr) 250px;
-        gap: 3rem;
-        max-width: 1500px;
+        grid-template-columns: 260px minmax(0, 1fr) 260px;
+        gap: 40px;
+        max-width: 1600px;
         margin: 0 auto;
-        padding: 2rem;
+        padding: 40px 20px;
         align-items: start;
     }
 
+    /* Левая колонка */
     .left-sidebar {
         position: sticky;
-        top: 5rem;
-        max-height: calc(100vh - 6rem);
+        top: 80px;
+        height: fit-content;
+        max-height: calc(100vh - 100px);
         overflow-y: auto;
-        padding-right: 1rem;
     }
 
-    aside h3 {
+    .sidebar-content h3 {
         color: var(--fg);
-        font-size: 1.1rem;
-        margin-top: 0;
-        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
         text-transform: uppercase;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 0.5rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+        opacity: 0.5;
     }
 
     .doc-links {
         display: flex;
         flex-direction: column;
-        gap: 0.8rem;
+        gap: 12px;
     }
 
     .doc-links a {
         color: #888;
-        font-size: 0.95rem;
         text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+    }
+
+    .doc-links a:hover, .doc-links a.active {
+        color: var(--accent);
     }
 
     .doc-links a.active {
-        color: var(--accent);
-        font-weight: bold;
+        font-weight: 600;
+    }
+
+    /* Центральная колонка */
+    .markdown-container {
+        min-width: 0; /* Важно для предотвращения раздувания грида от pre/code */
     }
 
     .markdown-content {
-        color: var(--fg);
-        line-height: 1.7;
-        min-width: 0;
+        color: #ccc;
+        line-height: 1.6;
     }
 
-    .markdown-content :global(h1) {
-        color: var(--accent);
-        font-size: 2.5rem;
-        margin-top: 0;
-        margin-bottom: 2rem;
-    }
-
-    .markdown-content :global(h2) {
-        font-size: 1.8rem;
-        margin-top: 3rem;
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    .markdown-content :global(h1) { color: var(--accent); font-size: 2.2rem; margin-bottom: 1.5rem; }
+    .markdown-content :global(h2) { 
+        color: var(--fg); 
+        font-size: 1.5rem; 
+        margin: 2.5rem 0 1rem; 
         padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
+    
     .markdown-content :global(pre) {
-        padding: 1.2rem;
+        background: #0d0d0d !important;
+        padding: 1.5rem;
         border-radius: 8px;
-        background: #111 !important;
-        margin: 1.5rem 0;
+        border: 1px solid rgba(255,255,255,0.05);
         overflow-x: auto;
+        margin: 1.5rem 0;
     }
 
+    .markdown-content :global(code) {
+        font-family: 'JetBrains Mono', monospace;
+        background: rgba(255,255,255,0.05);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .markdown-content :global(ul) {
+        padding-left: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .markdown-content :global(li) {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Правая колонка */
     .right-sidebar {
         position: sticky;
-        top: 5rem;
-        max-height: calc(100vh - 6rem);
+        top: 80px;
+        height: fit-content;
     }
 
     .sticky-toc {
-        background: rgba(15, 15, 15, 0.5);
-        padding: 0.8rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        overflow-y: auto;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .sticky-toc h3 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        opacity: 0.4;
     }
 
     .toc-links {
         display: flex;
         flex-direction: column;
-        gap: 0.3rem;
+        gap: 8px;
     }
 
     .toc-links a {
-        color: #A1A1AA;
+        color: #666;
         font-size: 0.85rem;
         text-decoration: none;
+        transition: color 0.2s;
     }
 
-    .depth-2 { margin-left: 0.8rem; }
-    .depth-3 { margin-left: 1.5rem; font-size: 0.8rem !important; }
+    .toc-links a:hover { color: var(--accent); }
+    .depth-3 { margin-left: 15px; font-size: 0.8rem; }
 
-    @media (max-width: 1024px) {
-        .wiki-layout { grid-template-columns: 200px minmax(0, 1fr); }
+    /* Адаптивность */
+    @media (max-width: 1200px) {
+        .wiki-layout {
+            grid-template-columns: 240px 1fr;
+        }
         .right-sidebar { display: none; }
     }
 
-    @media (max-width: 768px) {
-        .wiki-layout { display: flex; flex-direction: column; padding: 1rem; }
-        .left-sidebar { display: none; }
-        .right-sidebar { display: block; position: static; margin-bottom: 2rem; order: -1; }
+    @media (max-width: 900px) {
+        .wiki-layout {
+            display: block;
+            padding: 20px;
+        }
+        .left-sidebar {
+            position: static;
+            margin-bottom: 40px;
+            max-height: none;
+        }
     }
 </style>
