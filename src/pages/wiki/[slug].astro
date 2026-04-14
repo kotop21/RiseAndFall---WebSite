@@ -39,7 +39,7 @@ const currentSlug = Astro.params.slug;
 
         <div class="wiki-layout">
             <aside class="left-sidebar">
-                <div class="sidebar-content">
+                <div class="sidebar-sticky-wrapper">
                     <h3>Все статьи</h3>
                     <nav class="doc-links">
                         {allPages.map(page => (
@@ -61,7 +61,7 @@ const currentSlug = Astro.params.slug;
             </main>
 
             <aside class="right-sidebar">
-                <div class="sticky-toc">
+                <div class="sidebar-sticky-wrapper toc-box">
                     <h3>На этой странице</h3>
                     <nav class="toc-links">
                         {headings.map(heading => (
@@ -79,7 +79,8 @@ const currentSlug = Astro.params.slug;
 <style>
     .wiki-layout {
         display: grid;
-        grid-template-columns: 260px minmax(0, 1fr) 260px;
+        grid-template-columns: 260px 1fr 280px;
+        grid-template-areas: "left main right";
         gap: 40px;
         max-width: 1600px;
         margin: 0 auto;
@@ -87,18 +88,21 @@ const currentSlug = Astro.params.slug;
         align-items: start;
     }
 
-    /* Левая колонка */
-    .left-sidebar {
+    .left-sidebar { grid-area: left; }
+    .markdown-container { grid-area: main; min-width: 0; }
+    .right-sidebar { grid-area: right; }
+
+    .sidebar-sticky-wrapper {
         position: sticky;
-        top: 80px;
-        height: fit-content;
-        max-height: calc(100vh - 100px);
+        top: 100px;
+        max-height: calc(100vh - 120px);
         overflow-y: auto;
     }
 
-    .sidebar-content h3 {
+    /* Левое меню */
+    .sidebar-sticky-wrapper h3 {
         color: var(--fg);
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-bottom: 20px;
@@ -115,7 +119,6 @@ const currentSlug = Astro.params.slug;
         color: #888;
         text-decoration: none;
         font-size: 0.95rem;
-        transition: color 0.2s;
     }
 
     .doc-links a:hover, .doc-links a.active {
@@ -123,28 +126,24 @@ const currentSlug = Astro.params.slug;
     }
 
     .doc-links a.active {
-        font-weight: 600;
+        font-weight: bold;
     }
 
-    /* Центральная колонка */
-    .markdown-container {
-        min-width: 0; /* Важно для предотвращения раздувания грида от pre/code */
-    }
-
+    /* Контент статьи */
     .markdown-content {
         color: #ccc;
         line-height: 1.6;
     }
 
-    .markdown-content :global(h1) { color: var(--accent); font-size: 2.2rem; margin-bottom: 1.5rem; }
+    .markdown-content :global(h1) { color: var(--accent); font-size: 2.5rem; margin-bottom: 2rem; }
     .markdown-content :global(h2) { 
         color: var(--fg); 
-        font-size: 1.5rem; 
-        margin: 2.5rem 0 1rem; 
-        padding-bottom: 0.5rem;
+        font-size: 1.8rem; 
+        margin: 3rem 0 1rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.5rem;
     }
-    
+
     .markdown-content :global(pre) {
         background: #0d0d0d !important;
         padding: 1.5rem;
@@ -152,44 +151,24 @@ const currentSlug = Astro.params.slug;
         border: 1px solid rgba(255,255,255,0.05);
         overflow-x: auto;
         margin: 1.5rem 0;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .markdown-content :global(code) {
-        font-family: 'JetBrains Mono', monospace;
-        background: rgba(255,255,255,0.05);
+        font-family: monospace;
+        background: rgba(255,255,255,0.08);
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
         font-size: 0.9em;
     }
 
-    .markdown-content :global(ul) {
-        padding-left: 1.2rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .markdown-content :global(li) {
-        margin-bottom: 0.5rem;
-    }
-
-    /* Правая колонка */
-    .right-sidebar {
-        position: sticky;
-        top: 80px;
-        height: fit-content;
-    }
-
-    .sticky-toc {
+    /* Правое меню (TOC) */
+    .toc-box {
         background: rgba(255,255,255,0.02);
         border: 1px solid rgba(255,255,255,0.05);
         padding: 20px;
         border-radius: 12px;
-    }
-
-    .sticky-toc h3 {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        margin-bottom: 15px;
-        opacity: 0.4;
     }
 
     .toc-links {
@@ -202,29 +181,25 @@ const currentSlug = Astro.params.slug;
         color: #666;
         font-size: 0.85rem;
         text-decoration: none;
-        transition: color 0.2s;
     }
 
     .toc-links a:hover { color: var(--accent); }
-    .depth-3 { margin-left: 15px; font-size: 0.8rem; }
+    .depth-3 { margin-left: 15px; }
 
     /* Адаптивность */
     @media (max-width: 1200px) {
         .wiki-layout {
-            grid-template-columns: 240px 1fr;
+            grid-template-columns: 250px 1fr;
+            grid-template-areas: "left main";
         }
         .right-sidebar { display: none; }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 850px) {
         .wiki-layout {
-            display: block;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
-        .left-sidebar {
-            position: static;
-            margin-bottom: 40px;
-            max-height: none;
-        }
+        .left-sidebar { display: none; }
     }
 </style>
