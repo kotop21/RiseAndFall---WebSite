@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+<div align="center">
 
-```sh
-bun create astro@latest -- --template minimal
+# ⚔️ Rise And Fall Community Hub
+
+![Превью сайта](images/preview.png)
+
+</div>
+
+---
+
+## 📖 О проекте
+
+Этот проект — центральный узел для игроков **Rise and Fall**. Он объединяет в себе базу знаний (Wiki), глобальную рейтинговую систему и пошаговые руководства. Сайт создан xxds для комьюнити с упором на экстремальную скорость загрузки.
+
+## ⚡️ Стек технологий
+
+Проект построен на современных инструментах с упором на производительность и чистый код:
+
+* **[Astro](https://astro.build/)** — основной фреймворк для генерации статического контента (SSG).
+* **[TypeScript](https://www.typescriptlang.org/)** — строгая типизация для стабильности.
+* **[Bun](https://bun.sh/)** — сверхбыстрый рантайм, пакетный менеджер и сборщик.
+* **[Markdown](https://daringfireball.net/projects/markdown/)** — хранение контента Вики в удобном текстовом формате.
+
+## 🚀 Фишки
+
+* **14KB TCP Optimized** — большинство страниц оптимизированы для загрузки за один цикл TCP-окна.
+* **Smart Wiki** — автогенерация оглавления (TOC), навигация по статьям и стилизованная подсветка кода.
+* **Responsive Design** — адаптивная верстка: навигация всегда под рукой, независимо от размера экрана.
+* **Sticky Sidebars** — умные боковые панели, для чтении длинных гайдов.
+
+## 🛠 Быстрый старт
+
+### Установка зависимостей
+```bash
+bun install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+### Запуск в режиме разработки
+```bash
+bun run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Сборка проекта
+```bash
+bun run build
+```
+Готовый статический сайт будет лежать в папке `dist/`.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+---
 
-Any static assets, like images, can be placed in the `public/` directory.
+<div align="center">
 
-## 🧞 Commands
+Автор проекта: **xxds** ❤️  
+Специально для комьюнити **Rise and Fall**
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+</div>

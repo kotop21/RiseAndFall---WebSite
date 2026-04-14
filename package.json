@@ -5,13 +5,23 @@
   "engines": {
     "node": ">=22.12.0"
   },
+  "bundlesize": [
+    {
+      "path": "./dist/**/*.html",
+      "maxSize": "14 kB"
+    }
+  ],
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && bundlesize",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^6.1.6"
+  },
+  "devDependencies": {
+    "bundlesize2": "^0.0.35",
+    "typescript": "^6.0.2"
   }
 }

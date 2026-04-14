@@ -1,17 +1,247 @@
 ---
-
+import '@styles/global.css';
+import Header from '@components/Header.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Rise and Fall: Civilizations at War</title>
+    </head>
+    <body>
+        <Header isSticky={true} />
+        <main>
+            <header>
+                <h1>Rise and Fall:<br>Civilizations at War</h1>
+                <p>Единая точка входа в мир Rise & Fall. Официальный хаб сообщества: актуальная база знаний, глобальный рейтинг игроков и пошаговые инструкции для новичков.</p>
+                
+                <div class="hero-actions">
+                    <a href="https://github.com/kotop21/RiseAndFall---launcher/releases" class="download-button" target="_blank" rel="noopener noreferrer">
+                        <span>Скачать лаунчер</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    </a>
+                    <nav class="secondary-nav">
+                        <a href="#" target="_blank">GitHub</a>
+                        <a href="https://discord.gg/EKTAsxemqf" target="_blank">Discord</a>
+                    </nav>
+                </div>
+            </header>
+
+            <div>
+                <section>
+                    <h2>🎮 Как начать играть</h2>
+                    <div class="step-list">
+                        <div class="step">
+                            <div class="step-num">01</div>
+                            <div class="step-text">Скачайте лаунчер с GitHub.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">02</div>
+                            <div class="step-text">В лаунчере скачайте игру + установите <strong>фикс баланса</strong> (встроено в лаунчер).</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">03</div>
+                            <div class="step-text">Установите <strong>dgVoodoo</strong> (крайне рекомендуется, есть в лаунчере).</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">04</div>
+                            <div class="step-text">Нажмите <code>Подключиться к сети</code> для старта.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>🏆 Рейтинговые игры (1х1)</h2>
+                    <div class="alert" style="padding: 0.9rem 1.5rem;">
+                        Запись игры строго обязательна для обоих игроков.
+                    </div>
+                    <div class="step-list">
+                        <div class="step">
+                            <div class="step-num">01</div>
+                            <div class="step-text">Зайдите в Discord (канал <span>#снг-чат</span> или <span>#international-chat</span>).</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">02</div>
+                            <div class="step-text">Регистрация: <code>/register [ваш_ник]</code></div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">03</div>
+                            <div class="step-text">Вызов игрока: <code>/duel @ник</code></div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">04</div>
+                            <div class="step-text">Игра до 2 побед (макс. 3 раунда).</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">05</div>
+                            <div class="step-text">Отправьте видео игры через <code>/report</code>.</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <hr />
+                <p>Автор: xxds ❤️</p>
+            </footer>
+        </main>
+    </body>
 </html>
+
+<style>
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    header {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        color: var(--accent);
+        margin: 0;
+        line-height: 1.1;
+    }
+
+    header p {
+        font-size: 1rem;
+        color: #888;
+        margin: 0;
+        max-width: 700px;
+        line-height: 1.5;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        margin-top: 0.5rem;
+    }
+
+    .download-button {
+    	  background-color: #ad8b4a;
+        box-shadow: 0 0 30px 2px rgba(197, 160, 89, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: var(--accent);
+        color: var(--bg);
+        padding: 0.8rem 1.8rem;
+        border-radius: 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-size: 1rem;
+        border: none !important;
+        transition: background-color 0.1s, box-shadow 0.1s;
+    }
+
+    .download-button svg {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .download-button:hover {
+
+        border: none !important;
+    }
+
+    .download-button:active {
+        background-color: #94763e;
+        box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+    }
+
+    .secondary-nav {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .secondary-nav a {
+        color: #666;
+        font-size: 0.85rem;
+        text-decoration: none;
+        text-transform: uppercase;
+        border: none !important;
+    }
+
+    .secondary-nav a:hover {
+        color: var(--accent);
+        border: none !important;
+    }
+
+    section {
+        margin-bottom: 3.5rem;
+    }
+
+    h2 {
+        font-size: 28px;
+        color: var(--fg);
+        margin: 0 0 1.5rem 0;
+        font-weight: normal;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .step-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .step {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 1.2rem;
+        align-items: baseline;
+        padding: 0.8rem;
+        border-radius: 4px;
+    }
+
+    .step-num {
+        color: var(--accent);
+        font-size: 0.85rem;
+        opacity: 0.6;
+        font-family: monospace;
+        text-align: right;
+    }
+
+    .step-text {
+        color: #A1A1AA;
+        font-size: 1rem;
+    }
+
+    footer {
+        text-align: center;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        margin: 0 0 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+        main {
+            padding: 2.5rem 1.2rem;
+            gap: 2.5rem;
+        }
+        .download-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

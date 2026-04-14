@@ -1,0 +1,164 @@
+---
+import '@styles/global.css';
+import Header from '@components/Header.astro';
+
+const apiData = [
+    { name: "xxds", rating: 3250 },
+    { name: "RomeInvictus", rating: 2840 },
+    { name: "Legatus_Maximus", rating: 2750 },
+    { name: "ShadowBlade", rating: 2100 },
+    { name: "Aurelius", rating: 2050 },
+    { name: "Vercingetorix", rating: 2010 },
+    { name: "IronFist", rating: 1420 },
+    { name: "Spartacus", rating: 1350 },
+    { name: "Crixus", rating: 1100 },
+    { name: "NoobSlayer99", rating: 800 },
+    { name: "FreshBlood", rating: 650 },
+    { name: "Peasant", rating: 420 },
+];
+
+const TIERS = [
+    { id: "emperor", name: "Император", icon: "👑", color: "#F4D03F", minRating: 3000 },
+    { id: "centurion", name: "Центурион", icon: "🛡️", color: "#E74C3C", minRating: 2500 },
+    { id: "legionnaire", name: "Легионер", icon: "⚔️", color: "#9B59B6", minRating: 2000 },
+    { id: "gladiator", name: "Гладиатор", icon: "🔱", color: "#3498DB", minRating: 1000 },
+    { id: "recruit", name: "Новобранец", icon: "🎯", color: "#2ECC71", minRating: 0 },
+];
+
+const sortedPlayers = apiData.sort((a, b) => b.rating - a.rating);
+
+const columns = TIERS.map((tier, index) => {
+    const maxRating = index === 0 ? Infinity : TIERS[index - 1].minRating;
+    return {
+        ...tier,
+        players: sortedPlayers.filter(p => p.rating >= tier.minRating && p.rating < maxRating)
+    };
+});
+---
+
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Рейтинговая таблица | Rise and Fall</title>
+    </head>
+    <body>
+        <Header />
+
+        <main>
+            <header style="text-align: center;">
+                <p style="color: #888; font-size: 1.1rem;">Текущий сезон (1х1)</p>
+            </header>
+
+            <div class="tiers-grid">
+                {columns.map(column => (
+                    <div class="tier-column" style={`--tier-color: ${column.color};`}>
+                        <div class="tier-header">
+                            <span>{column.icon}</span>
+                            <h2>{column.name}</h2>
+                        </div>
+                        
+                        <div class="tier-body">
+                            {column.players.length === 0 ? (
+                                <div class="empty-state">Пусто</div>
+                            ) : (
+                                column.players.map(player => (
+                                    <div class="player-card">
+                                        <span class="player-name">{player.name}</span>
+                                        <span style="color: var(--accent); font-size: 0.9rem;">{player.rating}</span>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+        </main>
+    </body>
+</html>
+
+<style>
+    main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem 2rem 5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .tiers-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2rem;
+        width: 100%;
+    }
+
+    .tier-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid var(--tier-color);
+    }
+
+    .tier-header h2 {
+        font-size: 1rem;
+        color: var(--tier-color);
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .tier-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .empty-state {
+        color: #555;
+        font-style: italic;
+        font-size: 0.9rem;
+    }
+
+    .player-card {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.3rem 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .player-name {
+        color: var(--fg);
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 0.5rem;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 0 0 2rem 0;
+    }
+
+    @media (max-width: 1024px) {
+        .tiers-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        main {
+            padding: 1.5rem 1rem;
+        }
+        .tiers-grid {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+    }
+</style>
