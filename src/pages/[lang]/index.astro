@@ -1,0 +1,67 @@
+---
+import '@styles/global.css';
+import Header from '@components/Header.astro';
+import { ui, useTranslations } from '../../i18n/ui';
+
+import RuContent from '@components/home/ru.astro';
+import EnContent from '@components/home/en.astro';
+
+export function getStaticPaths() {
+    return Object.keys(ui).map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof ui);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Rise and Fall: Civilizations at War</title>
+        <meta name="description" content={t('hero.desc')} />
+        <meta name="keywords" content="rise and fall, civilizations at war, rts, download, multiplayer, game" />
+        <meta property="og:title" content="Rise and Fall: Civilizations at War" />
+        <meta property="og:description" content={t('hero.desc')} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalURL} />
+        <link rel="canonical" href={canonicalURL} />
+    </head>
+    <body>
+        <Header isSticky={true} lang={lang} />
+        <main>
+            {lang === 'ru' && <RuContent />}
+            {lang === 'en' && <EnContent />}
+        </main>
+    </body>
+</html>
+
+<style>
+    main { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; display: flex; flex-direction: column; gap: 4rem; }
+    
+    :global(header) { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+    :global(h1) { font-size: clamp(2rem, 6vw, 3.5rem); color: var(--accent); margin: 0; line-height: 1.1; }
+    :global(header p) { font-size: 1rem; color: #888; margin: 0; max-width: 700px; line-height: 1.5; }
+    :global(.hero-actions) { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; margin-top: 0.5rem; }
+    :global(.download-button) { background-color: #ad8b4a; box-shadow: 0 0 30px 2px rgba(197, 160, 89, 0.4); display: flex; align-items: center; gap: 0.8rem; background: var(--accent); color: var(--bg); padding: 0.8rem 1.8rem; border-radius: 4px; font-weight: bold; text-transform: uppercase; text-decoration: none; font-size: 1rem; transition: 0.1s; border: none !important; }
+    :global(.download-button svg) { width: 1.2rem; height: 1.2rem; }
+    :global(.download-button:active) { background-color: #94763e; box-shadow: 0 0 10px rgba(197, 160, 89, 0.2); }
+    :global(.secondary-nav) { display: flex; gap: 2rem; }
+    :global(.secondary-nav a) { color: #666; font-size: 0.85rem; text-decoration: none; text-transform: uppercase; border: none !important; }
+    :global(.secondary-nav a:hover) { color: var(--accent); }
+    :global(section) { margin-bottom: 3.5rem; }
+    :global(h2) { font-size: 28px; color: var(--fg); margin: 0 0 1.5rem 0; font-weight: normal; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    :global(.step-list) { display: flex; flex-direction: column; gap: 0.8rem; }
+    :global(.step) { display: grid; grid-template-columns: 40px 1fr; gap: 1.2rem; align-items: baseline; padding: 0.8rem; border-radius: 4px; }
+    :global(.step-num) { color: var(--accent); font-size: 0.85rem; opacity: 0.6; font-family: monospace; text-align: right; }
+    :global(.step-text) { color: #A1A1AA; font-size: 1rem; }
+    :global(footer) { text-align: center; }
+    :global(hr) { border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%; margin: 0 0 1.5rem 0; }
+    
+    @media (max-width: 768px) { 
+        main { padding: 2.5rem 1.2rem; gap: 2.5rem; } 
+        :global(.download-button) { width: 100%; justify-content: center; } 
+    }
+</style>

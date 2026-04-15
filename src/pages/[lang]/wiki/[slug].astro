@@ -1,0 +1,125 @@
+---
+import '@styles/global.css';
+import Header from '@components/Header.astro';
+import { ui, useTranslations } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+    const allDocs = Object.values(import.meta.glob('@docs/**/*.md', { eager: true }));
+    const paths = [];
+
+    for (const lang of Object.keys(ui)) {
+        const langDocs = allDocs.filter((f: any) => f.file.includes(`/docs/${lang}/`));
+        
+        const allPages = langDocs.map((f: any) => {
+            const slug = f.file.split('/').pop().replace('.md', '').toLowerCase();
+            return { slug, title: f.frontmatter.title || slug };
+        });
+
+        for (const file of langDocs) {
+            const slug = (file as any).file.split('/').pop().replace('.md', '').toLowerCase();
+            const rawText = (file as any).rawContent ? (file as any).rawContent() : '';
+            const hasCode = rawText.includes('```') || rawText.includes('`');
+
+            paths.push({
+                params: { lang, slug },
+                props: { currentFile: file, allPages, hasCode }
+            });
+        }
+    }
+    return paths;
+}
+
+const { currentFile, allPages, hasCode } = Astro.props;
+const { lang } = Astro.params;
+const { Content, frontmatter, getHeadings } = currentFile;
+const headings = getHeadings();
+
+const t = useTranslations(lang as keyof typeof ui);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const currentSlug = Astro.params.slug.toLowerCase();
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{frontmatter.title} | Rise and Fall Wiki</title>
+        
+        <meta name="description" content={frontmatter.description || t('hero.desc')} />
+        {frontmatter.keywords && <meta name="keywords" content={frontmatter.keywords} />}
+        
+        <meta property="og:title" content={`${frontmatter.title} | Rise and Fall Wiki`} />
+        <meta property="og:description" content={frontmatter.description || t('hero.desc')} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonicalURL} />
+        <link rel="canonical" href={canonicalURL} />
+        
+        {hasCode && (
+            <style is:inline>
+                .markdown-content pre { background: #0d0d0d !important; padding: 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; margin: 1.5rem 0; }
+                .markdown-content pre code { display: block; padding: 1.5rem; line-height: 1.6; background: transparent !important; }
+                .markdown-content code { word-break: break-word; }
+            </style>
+        )}
+    </head>
+    <body>
+        <Header isSticky={true} lang={lang} />
+
+        <div class="wiki-layout">
+            <aside class="left-sidebar">
+                <div class="sidebar-sticky-wrapper">
+                    <h3>{t('wiki.all')}</h3>
+                    <nav class="doc-links">
+                        {allPages.map((page: any) => (
+                            <a 
+                                href={`${base}/${lang}/wiki/${page.slug}/`} 
+                                class={currentSlug === page.slug ? "active" : ""}
+                            >
+                                {page.title}
+                            </a>
+                        ))}
+                    </nav>
+                </div>
+            </aside>
+
+            {headings.length > 0 && (
+                <aside class="right-sidebar">
+                    <div class="toc-box">
+                        <nav class="toc-links">
+                            {headings.map((heading: any) => (
+                                <a href={`#${heading.slug}`} class={`depth-${heading.depth}`}>
+                                    {heading.text}
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+                </aside>
+            )}
+
+            <main class="markdown-container">
+                <article class="markdown-content">
+                    <Content />
+                </article>
+            </main>
+        </div>
+    </body>
+</html>
+
+<style>
+    .wiki-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr) 280px; grid-template-areas: "left main right"; gap: 40px; max-width: 1600px; margin: 0 auto; padding: 40px 20px; }
+    .left-sidebar { grid-area: left; } .markdown-container { grid-area: main; min-width: 0; overflow: hidden; } .right-sidebar { grid-area: right; }
+    .sidebar-sticky-wrapper { position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto; }
+    .doc-links { display: flex; flex-direction: column; gap: 12px; }
+    .doc-links a { color: #A1A1AA; font-size: 0.95rem; }
+    .doc-links a:hover, .doc-links a.active { color: var(--accent); }
+    .markdown-content { max-width: 100%; }
+    .markdown-content :global(h1), .markdown-content :global(h2), .markdown-content :global(h3), .markdown-content :global(h4), .markdown-content :global(h5), .markdown-content :global(h6) { scroll-margin-top: 120px; }
+    .toc-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; position: sticky; top: 100px; }
+    .toc-links { display: flex; flex-direction: column; gap: 10px; }
+    .toc-links a { color: #A1A1AA; font-size: 0.85rem; }
+    .toc-links a:hover { color: var(--accent); } .depth-3 { margin-left: 15px; }
+    a:hover { border-color: var(--accent); }
+    @media (max-width: 1200px) { .wiki-layout { grid-template-columns: 1fr; grid-template-areas: "main"; display: flex; flex-direction: column; } .left-sidebar { display: none; } .right-sidebar { display: block; order: -1; width: 100%; } .toc-box { position: static; margin-bottom: 20px; } }
+</style>

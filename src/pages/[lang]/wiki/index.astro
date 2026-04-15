@@ -1,0 +1,55 @@
+---
+import '@styles/global.css';
+import Header from '@components/Header.astro';
+import { ui } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+    return Object.keys(ui).map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const files = Object.values(import.meta.glob('@docs/**/*.md', { eager: true }));
+const langFiles = files.filter((f: any) => f.file.includes(`/docs/${lang}/`));
+
+const allPages = langFiles.map((f: any) => {
+    const slug = f.file.split('/').pop().replace('.md', '').toLowerCase();
+    return { slug, title: f.frontmatter.title || slug };
+});
+
+const readArticle = lang === 'ru' ? 'Читать статью' : 'Read the article';
+---
+
+<!doctype html>
+<html lang={lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Вики | Rise and Fall</title>
+    </head>
+    <body>
+        <Header lang={lang} />
+        <main class="wiki-index">
+            <div class="card-grid">
+                {allPages.map(page => (
+                    <a href={`${base}/${lang}/wiki/${page.slug}/`} class="card">
+                        <h2>{page.title}</h2>
+                        <p>{readArticle} ↗</p>
+                    </a>
+                ))}
+            </div>
+        </main>
+    </body>
+</html>
+
+<style>
+    /* Твои стили wiki-index */
+    .wiki-index { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 8px; text-decoration: none; transition: 0.2s;}
+    .card:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--accent);}
+    .card h2 { color: var(--fg); margin: 0 0 1rem 0; font-size: 1.2rem; }
+    .card p { color: #888; margin: 0; font-size: 0.9rem; }
+    @media (max-width: 768px) { .wiki-index { padding: 2rem 1rem; } .card-grid { grid-template-columns: 1fr; } .card { padding: 1.5rem; } }
+</style>

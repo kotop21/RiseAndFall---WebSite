@@ -1,5 +1,7 @@
 ---
 title: "Гайд по RafLoader (lua)"
+description: "Подробная инструкция по установке патча баланса для игры Rise and Fall через лаунчер."
+keywords: "rise and fall, патч, баланс, фикс, установка, гайд"
 ---
 ## 📦 Memory API
 
