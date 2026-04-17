@@ -1,6 +1,6 @@
 ---
 title: "Гайд по RafLoader (lua)"
-description: "Подробная инструкция по установке патча баланса для игры Rise and Fall через лаунчер."
+description: "Полное руководство по RafLoader: создание Lua-скриптов для Rise and Fall: Civilization at war. Узнайте, как изменять игровую логику в реальном времени, использовать хуки и управлять памятью процесса."
 keywords: "rise and fall, патч, баланс, фикс, установка, гайд"
 ---
 ## 📦 Memory API

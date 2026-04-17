@@ -1,7 +1,6 @@
 ---
-
 title: "RafLoader Guide (Lua)"
-description: "Detailed instructions for installing a balance patch for Rise and Fall using the launcher."
+description: "The Ultimate RafLoader Guide: building Lua scripts for Rise and Fall: Civilization at War. Learn how to modify game logic in real-time, use hooks, and manage process memory."
 keywords: "rise and fall, patch, balance, fix, installation, guide"
 ---
 

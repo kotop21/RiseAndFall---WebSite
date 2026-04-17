@@ -10,8 +10,13 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
 
-const pageTitle = lang === 'ru' ? 'Рейтинговая таблица | Rise and Fall' : 'Leaderboard | Rise and Fall';
-const pageDesc = lang === 'ru' ? 'Глобальный рейтинг игроков Rise and Fall в режиме 1х1.' : 'Global player rankings for Rise and Fall in 1v1 mode.';
+const pageTitle = lang === 'ru' 
+    ? 'Рейтинговая таблица | Rise and Fall: Civilizations at War' 
+    : 'Leaderboard | Rise and Fall: Civilizations at War';
+
+const pageDesc = lang === 'ru' 
+    ? 'Глобальный рейтинг игроков Rise and Fall: Civilizations at War в режиме 1х1.' 
+    : 'Global player rankings for Rise and Fall: Civilizations at War in 1v1 mode.';
 const loadingText = lang === 'ru' ? 'Загрузка рейтинга...' : 'Loading leaderboard...';
 const errorText = lang === 'ru' ? 'Ошибка подключения к серверу рейтинга.' : 'Failed to connect to the leaderboard server.';
 const nothing = lang === 'ru' ? 'Пусто' : 'Empty';
