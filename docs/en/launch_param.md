@@ -17,18 +17,18 @@ Specifies the path to the folder containing game resources.
 **Syntax:**
 
 ```
--datapath "<folder_name>\\"
+-datapath "<folder_name>\"
 ```
 
 **Notes:**
 
 * The parameter is **case-insensitive** (`-datapath`, `-DataPath`, `-DATAPATH`, etc.)
-* The path must **end with a `\\`**
+* The path must **end with a `\`**
 
 **Example:**
 
 ```
--datapath "Data\\"
+-datapath "Data\"
 ```
 
 ---
@@ -41,17 +41,17 @@ Specifies the path to the folder containing required game libraries.
 **Syntax:**
 
 ```
--redistpath "<folder_name>\\"
+-redistpath "<folder_name>\"
 ```
 
 **Notes:**
 
-* The path must end with a `\\`
+* The path must end with a `\`
 
 **Example:**
 
 ```
--redistpath "redist\\"
+-redistpath "redist\"
 ```
 
 ---
