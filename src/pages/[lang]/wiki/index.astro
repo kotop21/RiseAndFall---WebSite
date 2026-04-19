@@ -56,10 +56,10 @@ const urlEn = `${siteUrl}${base}/en${pathWithoutLang}`;
 
 <style>
     .wiki-index { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card-grid { display: flex; flex-direction: column; gap: 1.5rem; }
     .card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 8px; text-decoration: none; transition: 0.2s;}
     .card:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--accent);}
     .card h2 { color: var(--fg); margin: 0 0 1rem 0; font-size: 1.2rem; }
     .card p { color: #888; margin: 0; font-size: 0.9rem; }
-    @media (max-width: 768px) { .wiki-index { padding: 2rem 1rem; } .card-grid { grid-template-columns: 1fr; } .card { padding: 1.5rem; } }
+    @media (max-width: 768px) { .wiki-index { padding: 2rem 1rem; } .card { padding: 1.5rem; } }
 </style>
